@@ -1,12 +1,17 @@
 # Import libraries
+import os
 import re
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 def get_book_recommendations(books_user_likes=None):
-    # Import dataset and rename the first column to 'index'
-    df = pd.read_csv("/Users/vincent/Desktop/Book_recommender/Goodreads_best1500books.csv")
+    # Define the current directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Load the CSV file
+    csv_path = os.path.join(current_dir, "Goodreads_best1500books.csv")
+    df = pd.read_csv(csv_path)
 
     # Rename the first column to 'index'
     df.rename(columns={df.columns[0]: 'index'}, inplace=True)

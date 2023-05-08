@@ -16,8 +16,10 @@ def main(df):
 
     # Prepare a list of book names for the suggestions
     book_names = df['book_name'].tolist()
-
-    books_user_likes = st.multiselect("Select a book you like:", options=book_names, max_selections=1)
+    books_user_likes = st.multiselect(
+        "Select a book you like:",
+        options=book_names,
+        max_selections=1)
 
     if len(books_user_likes) > 1:
         st.warning("Please select only one book.")
