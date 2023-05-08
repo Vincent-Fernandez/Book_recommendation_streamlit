@@ -1,15 +1,12 @@
-# bookrecommender function
-
 # Import libraries
 import re
 import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def get_book_recommendations(books_user_likes):
-
+def get_book_recommendations(books_user_likes=None):
     # Import dataset and rename the first column to 'index'
-    df = pd.read_csv("/Users/vincent/Downloads/Goodreads_best1500books.csv")
+    df = pd.read_csv("/Users/vincent/Desktop/Book_recommender/Goodreads_best1500books.csv")
 
     # Rename the first column to 'index'
     df.rename(columns={df.columns[0]: 'index'}, inplace=True)
@@ -54,28 +51,27 @@ def get_book_recommendations(books_user_likes):
     def get_index_from_book_name(book_name):
         return df[df.book_name == book_name]["index"].values[0]
 
-    # Get the index of the book the user likes
-    books_index = get_index_from_book_name(books_user_likes)
+    if books_user_likes:
+        # Get the index of the book the user likes
+        books_index = get_index_from_book_name(books_user_likes)
 
-    # Get the similarity scores between the book the user likes and all other books
-    similar_books = list(enumerate(cosine_sim[books_index]))
+        # Get the similarity scores between the book the user likes and all other books
+        similar_books = list(enumerate(cosine_sim[books_index]))
 
-    # Sort the list of books by their similarity score (highest to lowest), and exclude the book the user likes
-    sorted_similar_books = sorted(similar_books, key=lambda x: x[1], reverse=True)[1:16]
+        # Sort the list of books by their similarity score (highest to lowest), and exclude the book the user likes
+        sorted_similar_books = sorted(similar_books, key=lambda x: x[1], reverse=True)[1:16]
 
-    # Define a function to get the name of a book by its index
-    def get_book_name_from_index(index):
-        return df[df.index == index]["book_name"].values[0]
+        # Define a function to get the name of a book by its index
+        def get_book_name_from_index(index):
+            return df[df.index == index]["book_name"].values[0]
 
-    # Create a list of the names of the 15 most similar books
-    result = []
-    for book in sorted_similar_books:
-        result.append(get_book_name_from_index(book[0]))
+        # Create a list of the names of the 15 most similar books
+        result = []
+        for book in sorted_similar_books:
+            result.append(get_book_name_from_index(book[0]))
 
-    # Print the list of recommended books
-    for book in result:
-        print(book)
-
-
-    # Return the list of recommended books and the DataFrame
-    return result, df
+        # Return the list of recommended books and the DataFrame
+        return result, df
+    else:
+        # If no book is provided, just return the DataFrame
+        return None, df
